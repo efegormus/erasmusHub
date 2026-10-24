@@ -1,4 +1,3 @@
-
 # ErasmusHub 🌍
 
 ### CS310 – Mobile Application Development
@@ -22,7 +21,7 @@ Due to data privacy regulations, universities cannot freely share the contact in
 
 - **User Authentication:** Registration, login, and email verification.
 - **Student Profiles:** Home university, host university, department, exchange term, exchange status, and optional contact links.
-- **University & City Search:** Browse universities and cities by country, city, or university name.
+- **University & City Search:** Browse universities and cities by country, city, or university name. Users can add a university that is missing from the list.
 - **Experience Sharing:** Publish exchange experiences, course information, tips, and recommendations.
 - **Ratings & Reviews:** Rate cost of living, course difficulty, professors, housing, safety, and social life on a 1–5 star scale.
 - **Comments:** Discuss experiences and ask questions under student posts.
@@ -64,7 +63,7 @@ The database will store:
 - University and city ratings
 - Places, categories, and reviews
 
-The initial country, city, and university lists will be prepared by the development team.
+The initial country, city, and university lists will be prepared by the development team. Users will be able to add new universities that are missing from the list.
 
 No external API is required for the core functionality. An external maps API may be integrated if the optional map feature is implemented.
 
@@ -110,7 +109,3 @@ The development scope and planned features are described in the project proposal
 - **Semester:** Fall 2026
 - **Project:** ErasmusHub
 - **Group:** 25
-
-
-
-
