@@ -96,9 +96,9 @@ The project aims to follow applicable data protection requirements, including KV
 
 ## 📌 Project Status
 
-**Current Phase: Step 1 – Project Proposal & GitHub Setup**
+**Current Phase: Flutter Foundation Setup**
 
-The project is currently in the planning and repository setup phase. Implementation of the mobile application has not started yet.
+The Flutter application now lives at the repository root, with Android/iOS scaffolding, routing, shared theme, local Poppins fonts, and form validators. See [development setup](docs/README.md) for run commands and project structure.
 
 The development scope and planned features are described in the project proposal.
 
