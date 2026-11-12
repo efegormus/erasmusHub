@@ -73,7 +73,7 @@ class _SignUpAccountScreenState extends State<SignUpAccountScreen> {
                       autofillHints: const [AutofillHints.email],
                       decoration: const InputDecoration(
                         labelText: 'University email',
-                        hintText: 'name.surname@sabanciuniv.edu',
+                        hintText: 'name.surname@university.edu.tr',
                       ),
                       validator: Validators.universityEmail,
                     ),
