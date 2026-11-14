@@ -43,7 +43,9 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
   String? _validateUniversity(String? value) {
     final requiredError = Validators.required(value);
     if (requiredError != null) return requiredError;
-    return _universities.contains(value) ? null : 'Pick a university from the list.';
+    return _universities.contains(value)
+        ? null
+        : 'Pick a university from the list.';
   }
 
   void _createAccount() {
@@ -87,25 +89,27 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
                     Autocomplete<String>(
                       optionsBuilder: (value) {
                         final query = value.text.trim().toLowerCase();
-                        if (query.isEmpty) return const Iterable<String>.empty();
+                        if (query.isEmpty) {
+                          return const Iterable<String>.empty();
+                        }
                         return _universities.where(
                           (u) => u.toLowerCase().contains(query),
                         );
                       },
                       fieldViewBuilder:
                           (context, controller, focusNode, onFieldSubmitted) {
-                        return TextFormField(
-                          controller: controller,
-                          focusNode: focusNode,
-                          decoration: const InputDecoration(
-                            labelText: 'Home university',
-                            hintText: 'Search your university',
-                            suffixIcon: Icon(Icons.arrow_drop_down),
-                          ),
-                          validator: _validateUniversity,
-                          onFieldSubmitted: (_) => onFieldSubmitted(),
-                        );
-                      },
+                            return TextFormField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              decoration: const InputDecoration(
+                                labelText: 'Home university',
+                                hintText: 'Search your university',
+                                suffixIcon: Icon(Icons.arrow_drop_down),
+                              ),
+                              validator: _validateUniversity,
+                              onFieldSubmitted: (_) => onFieldSubmitted(),
+                            );
+                          },
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
