@@ -21,7 +21,6 @@ void main() {
       'student@mit.edu',
       ' EFE@SABANCIUNIV.EDU ',
       'student@ogr.university.edu.tr',
-      'student@ox.ac.uk',
     ]) {
       expect(Validators.universityEmail(email), isNull, reason: email);
     }
@@ -34,6 +33,8 @@ void main() {
         '',
         ' ',
         'student@gmail.com',
+        'student@ox.ac.uk',
+        'student@university.edu.au',
         'student@edu.tr',
         'student@university.edu.evil.com',
         'student@@mit.edu',

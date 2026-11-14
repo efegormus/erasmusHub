@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_spacing.dart';
+import '../../core/router/app_routes.dart';
+import '../../shared/screens/placeholder_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('ErasmusHub')),
-    body: SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Text(
-            'Your exchange journey starts here.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
-      ),
-    ),
+  Widget build(BuildContext context) => PlaceholderScreen(
+    title: 'Find your destination',
+    showBack: false,
+    links: {
+      'University detail': AppRoutes.university('preview'),
+      'Add university': AppRoutes.addUniversity,
+    },
   );
 }

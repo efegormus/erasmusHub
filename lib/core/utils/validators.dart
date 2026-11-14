@@ -35,8 +35,10 @@ abstract final class Validators {
     final isAcademic =
         labels.last == 'edu' ||
         (labels.length >= 3 &&
-            RegExp(r'^[a-z]{2}$').hasMatch(labels.last) &&
-            {'edu', 'ac'}.contains(labels[labels.length - 2]));
-    return isAcademic ? null : 'Use your university email address.';
+            labels[labels.length - 2] == 'edu' &&
+            labels.last == 'tr');
+    return isAcademic
+        ? null
+        : 'Please use your university email (.edu or .edu.tr).';
   }
 }
