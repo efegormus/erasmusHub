@@ -1,13 +1,7 @@
 import 'exchange_experience.dart';
 
-/// Status of the student regarding exchange.
-enum ExchangeStatus {
-  planning('Going on exchange'),
-  returned('Returned');
-
-  const ExchangeStatus(this.label);
-  final String label;
-}
+// Re-exported so screens that only need the status enum can import this file.
+export 'exchange_experience.dart' show ExchangeStatus;
 
 class UserProfile {
   const UserProfile({
@@ -15,9 +9,12 @@ class UserProfile {
     required this.name,
     required this.email,
     required this.homeUniversity,
-    required this.department,
+    required this.major,
     required this.status,
-    this.contactLink,
+    this.minor = '',
+    this.instagram = '',
+    this.linkedin = '',
+    this.phone = '',
     this.experiences = const [],
   });
 
@@ -25,18 +22,26 @@ class UserProfile {
   final String name;
   final String email;
   final String homeUniversity;
-  final String department;
+  final String major;
+
+  /// Optional double major or minor. Empty when not set.
+  final String minor;
   final ExchangeStatus status;
 
-  /// Optional contact link (e.g. Instagram or LinkedIn).
-  final String? contactLink;
+  /// Optional contact links. Empty when not set.
+  final String instagram;
+  final String linkedin;
+  final String phone;
   final List<ExchangeExperience> experiences;
 
   UserProfile copyWith({
     String? name,
-    String? department,
+    String? major,
+    String? minor,
     ExchangeStatus? status,
-    String? contactLink,
+    String? instagram,
+    String? linkedin,
+    String? phone,
     List<ExchangeExperience>? experiences,
   }) {
     return UserProfile(
@@ -44,9 +49,12 @@ class UserProfile {
       name: name ?? this.name,
       email: email,
       homeUniversity: homeUniversity,
-      department: department ?? this.department,
+      major: major ?? this.major,
+      minor: minor ?? this.minor,
       status: status ?? this.status,
-      contactLink: contactLink ?? this.contactLink,
+      instagram: instagram ?? this.instagram,
+      linkedin: linkedin ?? this.linkedin,
+      phone: phone ?? this.phone,
       experiences: experiences ?? this.experiences,
     );
   }
