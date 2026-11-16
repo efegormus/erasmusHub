@@ -31,7 +31,8 @@ const List<Place> kPlaceholderPlaces = [
     city: 'Delft',
     country: 'Netherlands',
     category: PlaceCategory.sightseeing,
-    description: 'The old town square; climb the Nieuwe Kerk tower for the view.',
+    description:
+        'The old town square; climb the Nieuwe Kerk tower for the view.',
     rating: 4,
     addedBy: 'Elif Kaya',
     imageUrl: 'https://picsum.photos/seed/erasmushub-delft/600/360',

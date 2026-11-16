@@ -99,10 +99,7 @@ class PlaceCard extends StatelessWidget {
       color: AppColors.background,
       child: Padding(
         padding: EdgeInsets.all(AppSpacing.lg),
-        child: Image(
-          image: AssetImage(_fallbackAsset),
-          fit: BoxFit.contain,
-        ),
+        child: Image(image: AssetImage(_fallbackAsset), fit: BoxFit.contain),
       ),
     );
     final url = place.imageUrl;

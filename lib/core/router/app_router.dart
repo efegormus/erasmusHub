@@ -8,6 +8,8 @@ import '../../models/exchange_experience.dart';
 
 import '../../features/auth/login_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/places/add_place_screen.dart';
+import '../../features/places/places_screen.dart';
 import '../../features/profile/edit_profile_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/auth/sign_up_account_screen.dart';
@@ -84,10 +86,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.addPlace,
           name: 'addPlace',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Add place',
-            fallback: AppRoutes.places,
-          ),
+          builder: (context, state) => const AddPlaceScreen(),
         ),
         GoRoute(
           path: AppRoutes.editProfile,
@@ -136,11 +135,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
                 GoRoute(
                   path: AppRoutes.places,
                   name: 'places',
-                  builder: (context, state) => const PlaceholderScreen(
-                    title: 'Places',
-                    showBack: false,
-                    links: {'Add place': AppRoutes.addPlace},
-                  ),
+                  builder: (context, state) => const PlacesScreen(),
                 ),
               ],
             ),
