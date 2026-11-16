@@ -8,6 +8,7 @@ import '../../models/exchange_experience.dart';
 
 import '../../features/auth/login_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/matches/matches_screen.dart';
 import '../../features/places/add_place_screen.dart';
 import '../../features/places/places_screen.dart';
 import '../../features/profile/edit_profile_screen.dart';
@@ -144,10 +145,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
                 GoRoute(
                   path: AppRoutes.matches,
                   name: 'matches',
-                  builder: (context, state) => const PlaceholderScreen(
-                    title: 'Matches',
-                    showBack: false,
-                  ),
+                  builder: (context, state) => const MatchesScreen(),
                 ),
               ],
             ),
