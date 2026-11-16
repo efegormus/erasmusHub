@@ -7,6 +7,15 @@ enum ExchangeProgram {
   final String label;
 }
 
+/// Whether the student is going on, or has returned from, an exchange.
+enum ExchangeStatus {
+  planning('Going'),
+  returned('Returned');
+
+  const ExchangeStatus(this.label);
+  final String label;
+}
+
 /// One exchange experience of a student. A user can have several.
 class ExchangeExperience {
   const ExchangeExperience({
@@ -17,6 +26,7 @@ class ExchangeExperience {
     required this.program,
     required this.term,
     required this.department,
+    this.status = ExchangeStatus.returned,
   });
 
   final String id;
@@ -28,6 +38,7 @@ class ExchangeExperience {
   /// e.g. "Spring 2026"
   final String term;
   final String department;
+  final ExchangeStatus status;
 
   ExchangeExperience copyWith({
     String? id,
@@ -37,6 +48,7 @@ class ExchangeExperience {
     ExchangeProgram? program,
     String? term,
     String? department,
+    ExchangeStatus? status,
   }) {
     return ExchangeExperience(
       id: id ?? this.id,
@@ -46,6 +58,7 @@ class ExchangeExperience {
       program: program ?? this.program,
       term: term ?? this.term,
       department: department ?? this.department,
+      status: status ?? this.status,
     );
   }
 }
