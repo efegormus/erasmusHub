@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/login_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/profile/edit_profile_screen.dart';
+import '../../features/profile/profile_screen.dart';
 import '../../features/auth/sign_up_account_screen.dart';
 import '../../features/auth/sign_up_profile_screen.dart';
 import '../../shared/screens/placeholder_screen.dart';
@@ -89,11 +90,7 @@ GoRouter createAppRouter({
     GoRoute(
       path: AppRoutes.editProfile,
       name: 'editProfile',
-      builder: (context, state) => const PlaceholderScreen(
-        title: 'Edit profile',
-        fallback: AppRoutes.profile,
-        links: {'Add exchange': AppRoutes.addExchange},
-      ),
+      builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
       path: AppRoutes.addExchange,
@@ -159,7 +156,7 @@ GoRouter createAppRouter({
             GoRoute(
               path: AppRoutes.profile,
               name: 'profile',
-              builder: (context, state) => const _ProfilePlaceholder(),
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),
@@ -169,26 +166,3 @@ GoRouter createAppRouter({
 );
 
 final appRouter = createAppRouter();
-
-class _ProfilePlaceholder extends StatelessWidget {
-  const _ProfilePlaceholder();
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Profile')),
-    body: ListView(
-      padding: const EdgeInsets.all(24),
-      children: [
-        const Text('This screen is coming soon.'),
-        const SizedBox(height: 16),
-        OutlinedButton(
-          onPressed: () => context.push(AppRoutes.editProfile),
-          child: const Text('Edit profile'),
-        ),
-        TextButton(
-          onPressed: () => context.go(AppRoutes.login),
-          child: const Text('Log out'),
-        ),
-      ],
-    ),
-  );
-}
