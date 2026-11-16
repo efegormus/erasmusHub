@@ -1,0 +1,60 @@
+import '../../models/place.dart';
+
+/// Placeholder data owned by Rümeysa (Places / Add place screens).
+/// Own file on purpose, so it never conflicts with placeholder_data.dart.
+const List<Place> kPlaceholderPlaces = [
+  Place(
+    id: 'p1',
+    name: 'Café Linné',
+    city: 'Uppsala',
+    country: 'Sweden',
+    category: PlaceCategory.cafe,
+    description: 'Cheap fika and quiet tables, ten minutes from campus.',
+    rating: 4.5,
+    addedBy: 'Utku Batmaz',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-cafe/600/360',
+  ),
+  Place(
+    id: 'p2',
+    name: 'Carolina Rediviva Library',
+    city: 'Uppsala',
+    country: 'Sweden',
+    category: PlaceCategory.study,
+    description: 'Historic university library with long opening hours.',
+    rating: 5,
+    addedBy: 'Utku Batmaz',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-library/600/360',
+  ),
+  Place(
+    id: 'p3',
+    name: 'Markt Delft',
+    city: 'Delft',
+    country: 'Netherlands',
+    category: PlaceCategory.sightseeing,
+    description: 'The old town square; climb the Nieuwe Kerk tower for the view.',
+    rating: 4,
+    addedBy: 'Elif Kaya',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-delft/600/360',
+  ),
+  Place(
+    id: 'p4',
+    name: 'Mensa Arcisstraße',
+    city: 'Munich',
+    country: 'Germany',
+    category: PlaceCategory.food,
+    description: 'Student canteen with full meals under five euros.',
+    rating: 3.5,
+    addedBy: 'Can Demir',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-mensa/600/360',
+  ),
+  Place(
+    id: 'p5',
+    name: 'Razzmatazz',
+    city: 'Barcelona',
+    country: 'Spain',
+    category: PlaceCategory.nightlife,
+    description: 'Big club with five rooms; Erasmus nights every Thursday.',
+    rating: 4,
+    addedBy: 'Zeynep Arslan',
+  ),
+];

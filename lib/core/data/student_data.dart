@@ -1,0 +1,66 @@
+import '../../models/student.dart';
+import '../../models/user_profile.dart';
+
+/// Placeholder data owned by Rümeysa (Matches screen).
+/// Own file on purpose, so it never conflicts with placeholder_data.dart.
+const List<Student> kPlaceholderStudents = [
+  Student(
+    id: 's1',
+    name: 'Elif Kaya',
+    homeUniversity: 'Boğaziçi University',
+    department: 'Computer Engineering',
+    hostUniversity: 'TU Delft',
+    hostCity: 'Delft',
+    hostCountry: 'Netherlands',
+    term: 'Fall 2025',
+    status: ExchangeStatus.returned,
+    avatarUrl: 'https://i.pravatar.cc/150?img=47',
+  ),
+  Student(
+    id: 's2',
+    name: 'Can Demir',
+    homeUniversity: 'Sabancı University',
+    department: 'Computer Science',
+    hostUniversity: 'Technical University of Munich',
+    hostCity: 'Munich',
+    hostCountry: 'Germany',
+    term: 'Spring 2027',
+    status: ExchangeStatus.planning,
+    avatarUrl: 'https://i.pravatar.cc/150?img=12',
+  ),
+  Student(
+    id: 's3',
+    name: 'Zeynep Arslan',
+    homeUniversity: 'Koç University',
+    department: 'Economics',
+    hostUniversity: 'Universitat de Barcelona',
+    hostCity: 'Barcelona',
+    hostCountry: 'Spain',
+    term: 'Spring 2026',
+    status: ExchangeStatus.returned,
+    avatarUrl: 'https://i.pravatar.cc/150?img=32',
+  ),
+  Student(
+    id: 's4',
+    name: 'Mert Yılmaz',
+    homeUniversity: 'Sabancı University',
+    department: 'Industrial Engineering',
+    hostUniversity: 'Uppsala University',
+    hostCity: 'Uppsala',
+    hostCountry: 'Sweden',
+    term: 'Spring 2027',
+    status: ExchangeStatus.planning,
+  ),
+  Student(
+    id: 's5',
+    name: 'Ayşe Çelik',
+    homeUniversity: 'Bilkent University',
+    department: 'Computer Science',
+    hostUniversity: 'Uppsala University',
+    hostCity: 'Uppsala',
+    hostCountry: 'Sweden',
+    term: 'Spring 2026',
+    status: ExchangeStatus.returned,
+    avatarUrl: 'https://i.pravatar.cc/150?img=5',
+  ),
+];
