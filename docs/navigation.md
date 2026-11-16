@@ -8,17 +8,17 @@ separate routes so the PDF flow is reachable. Dialogs do not get extra routes.
 | Screen | Route | Current implementation |
 | --- | --- | --- |
 | Login | `/login` | Full login UI with inline validation and local logo |
-| Forgot password | `/forgot-password` | Scaffold |
+| Forgot password | `/forgot-password` | University email validation, 3-minute resend countdown (UI only) |
 | Sign up: account | `/sign-up` | Existing account form connected |
 | Sign up: profile | `/sign-up/profile` | Existing profile form connected |
-| Verify email | `/verify-email` | Scaffold |
+| Verify email | `/verify-email` | Resend with 60 s cooldown, "I've verified" opens Home; optional `?email=` |
 | Home | `/` | Scaffold |
 | University detail | `/universities/:id` | Scaffold, retains Home tab |
 | Post detail | `/posts/:id` | PostDetailScreen, comments and report dialog |
 | New post | `/posts/new?universityId=...` | NewPostScreen, validated form and confirmation |
-| Places | `/places` | Scaffold |
-| Add place | `/places/new` | Scaffold above the bottom bar |
-| Matches | `/matches` | Scaffold |
+| Places | `/places` | PlaceCard list, category filter, remove with undo |
+| Add place | `/places/new` | Form with inline validation and confirmation dialog, above the bottom bar |
+| Matches | `/matches` | StudentCard list with destination / university filters |
 | Profile | `/profile` | ProfileScreen with exchange cards and contacts |
 | Edit profile | `/profile/edit` | EditProfileScreen, validation and exchange management |
 | Add exchange | `/profile/exchanges/new` | AddExchangeScreen, add/edit with typed return value |
