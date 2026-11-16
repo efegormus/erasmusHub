@@ -6,31 +6,33 @@ import '../../models/user_profile.dart';
 const List<ExchangeExperience> kPlaceholderExperiences = [
   ExchangeExperience(
     id: 'exp1',
+    hostUniversity: 'TU Delft',
+    city: 'Delft',
+    country: 'Netherlands',
+    program: ExchangeProgram.erasmus,
+    term: 'Fall 2026',
+    department: 'Computer Science',
+    status: ExchangeStatus.planning,
+  ),
+  ExchangeExperience(
+    id: 'exp2',
     hostUniversity: 'Uppsala University',
     city: 'Uppsala',
     country: 'Sweden',
     program: ExchangeProgram.erasmus,
-    term: 'Spring 2026',
+    term: 'Spring 2025',
     department: 'Computer Science',
-  ),
-  ExchangeExperience(
-    id: 'exp2',
-    hostUniversity: 'TU Delft',
-    city: 'Delft',
-    country: 'Netherlands',
-    program: ExchangeProgram.exchange,
-    term: 'Fall 2025',
-    department: 'Computer Science',
+    status: ExchangeStatus.returned,
   ),
 ];
 
 const UserProfile kCurrentUser = UserProfile(
   id: 'u1',
-  name: 'Utku Batmaz',
+  name: 'Onur Utku Batmaz',
   email: 'utku.batmaz@sabanciuniv.edu',
   homeUniversity: 'Sabancı University',
-  department: 'Computer Science',
-  status: ExchangeStatus.returned,
-  contactLink: 'https://www.linkedin.com/in/example',
+  major: 'Computer Science',
+  minor: 'Economics',
+  status: ExchangeStatus.planning,
   experiences: kPlaceholderExperiences,
 );
