@@ -115,6 +115,7 @@ void main() {
       );
       await tester.tap(find.text('Profile').last);
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Log out'));
       await tester.tap(find.text('Log out'));
       await tester.pumpAndSettle();
       expect(router.state.uri.path, '/login');
