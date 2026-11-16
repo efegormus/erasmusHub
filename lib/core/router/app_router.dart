@@ -7,6 +7,7 @@ import '../../features/posts/add_exchange_screen.dart';
 import '../../models/exchange_experience.dart';
 
 import '../../features/auth/login_screen.dart';
+import '../../features/auth/forgot_password_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/matches/matches_screen.dart';
 import '../../features/places/add_place_screen.dart';
@@ -38,10 +39,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.forgotPassword,
           name: 'forgotPassword',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Forgot password',
-            fallback: AppRoutes.login,
-          ),
+          builder: (context, state) => const ForgotPasswordScreen(),
         ),
         GoRoute(
           path: AppRoutes.signUpAccount,
