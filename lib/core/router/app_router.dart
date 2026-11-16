@@ -16,6 +16,7 @@ import '../../features/profile/edit_profile_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/auth/sign_up_account_screen.dart';
 import '../../features/auth/sign_up_profile_screen.dart';
+import '../../features/auth/verify_email_screen.dart';
 import '../../shared/screens/placeholder_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import 'app_routes.dart';
@@ -54,10 +55,8 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.verifyEmail,
           name: 'verifyEmail',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Verify your email',
-            fallback: AppRoutes.signUpAccount,
-          ),
+          builder: (context, state) =>
+              VerifyEmailScreen(email: state.uri.queryParameters['email']),
         ),
         GoRoute(
           path: AppRoutes.addUniversity,
