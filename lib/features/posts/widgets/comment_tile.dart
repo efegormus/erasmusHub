@@ -23,6 +23,16 @@ class CommentTile extends StatelessWidget {
       border: Border.all(color: AppColors.border),
       borderRadius: BorderRadius.circular(12),
     ),
-    child: Text(comment.text, style: AppTextStyles.body),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          comment.author,
+          style: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(comment.text, style: AppTextStyles.body),
+      ],
+    ),
   );
 }
