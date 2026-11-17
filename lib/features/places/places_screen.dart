@@ -29,6 +29,8 @@ class _PlacesScreenState extends State<PlacesScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text('${place.name} removed'),
+          persist: false,
+          duration: const Duration(seconds: 4),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: () => placesStore.insert(index, place),
