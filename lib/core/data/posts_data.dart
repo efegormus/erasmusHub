@@ -49,16 +49,37 @@ const List<HostUniversity> kHostUniversities = [
     city: 'Lund',
     country: 'Sweden',
   ),
+  HostUniversity(
+    id: 'ku-leuven',
+    name: 'KU Leuven',
+    city: 'Leuven',
+    country: 'Belgium',
+  ),
+  HostUniversity(
+    id: 'tum',
+    name: 'Technical University of Munich',
+    city: 'Munich',
+    country: 'Germany',
+  ),
+  HostUniversity(
+    id: 'barcelona',
+    name: 'University of Barcelona',
+    city: 'Barcelona',
+    country: 'Spain',
+  ),
 ];
 
 const List<String> kTerms = [
   'Spring 2027',
-  'Fall 2026',
+  'Fall 2027',
   'Spring 2026',
-  'Fall 2025',
+  'Fall 2026',
   'Spring 2025',
-  'Fall 2024',
+  'Fall 2025',
   'Spring 2024',
+  'Fall 2024',
+  'Spring 2023',
+  'Fall 2023',
 ];
 
 HostUniversity? hostUniversityById(String? id) {
