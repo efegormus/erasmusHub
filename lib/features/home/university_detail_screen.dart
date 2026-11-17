@@ -8,12 +8,14 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../models/post.dart';
 import '../../models/university.dart';
+import '../../shared/widgets/app_card.dart';
 import '../../shared/widgets/empty_state.dart';
 import '../../shared/widgets/star_rating.dart';
 import 'widgets/rating_bar_row.dart';
 import 'widgets/university_image.dart';
 
-/// University detail (screen 07): banner, average ratings per category.
+/// University detail (screen 07): banner, average ratings per category,
+/// posts about the university and a "Write post" action.
 class UniversityDetailScreen extends StatefulWidget {
   const UniversityDetailScreen({super.key, required this.universityId});
 
@@ -24,6 +26,20 @@ class UniversityDetailScreen extends StatefulWidget {
 }
 
 class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
+  bool _showPlaces = false;
+
+  Future<void> _openPost(String postId) async {
+    await context.push(AppRoutes.post(postId));
+    // Comment counts may have changed on the post page.
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _writePost() async {
+    await context.push(AppRoutes.newPost(widget.universityId));
+    // A published post is inserted into placeholderPosts.
+    if (mounted) setState(() {});
+  }
+
   void _back() {
     if (context.canPop()) {
       context.pop();
@@ -55,10 +71,16 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
         ),
       );
     }
+    final posts = postsForUniversity(university.id);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: _back),
         title: Text(university.name),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _writePost,
+        icon: const Icon(Icons.add),
+        label: const Text('Write post'),
       ),
       body: SafeArea(
         child: Align(
@@ -66,11 +88,96 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
             child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              children: [_Header(university: university)],
+              // Bottom padding keeps the last card above the FAB.
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.xxl * 2,
+              ),
+              children: [
+                _Header(university: university),
+                const SizedBox(height: AppSpacing.md),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Posts'),
+                      selected: !_showPlaces,
+                      onSelected: (_) => setState(() => _showPlaces = false),
+                    ),
+                    ChoiceChip(
+                      label: const Text('Places'),
+                      selected: _showPlaces,
+                      onSelected: (_) => setState(() => _showPlaces = true),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                if (_showPlaces)
+                  EmptyState(
+                    icon: Icons.place_outlined,
+                    message:
+                        'Cafés, food and sights in ${university.city} '
+                        'are rated on the Places tab.',
+                    actionLabel: 'Open Places',
+                    onAction: () => context.go(AppRoutes.places),
+                  )
+                else if (posts.isEmpty)
+                  const EmptyState(
+                    icon: Icons.edit_note,
+                    message: 'No posts yet. Be the first to share your '
+                        'experience.',
+                  )
+                else
+                  for (final post in posts)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: _PostSummaryCard(
+                        post: post,
+                        onTap: () => _openPost(post.id),
+                      ),
+                    ),
+              ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// "Great courses, hard housing / Onur · Fall 2025 · 2 comments"
+class _PostSummaryCard extends StatelessWidget {
+  const _PostSummaryCard({required this.post, required this.onTap});
+
+  final Post post;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final comments = post.comments.length;
+    return AppCard(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            post.title,
+            style: AppTextStyles.body.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            '${post.author} · ${post.term} · '
+            '${comments == 1 ? '1 comment' : '$comments comments'}',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+          ),
+        ],
       ),
     );
   }
