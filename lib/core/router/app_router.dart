@@ -7,13 +7,18 @@ import '../../features/posts/add_exchange_screen.dart';
 import '../../models/exchange_experience.dart';
 
 import '../../features/auth/login_screen.dart';
+import '../../features/auth/forgot_password_screen.dart';
 import '../../features/home/add_university_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/home/university_detail_screen.dart';
+import '../../features/matches/matches_screen.dart';
+import '../../features/places/add_place_screen.dart';
+import '../../features/places/places_screen.dart';
 import '../../features/profile/edit_profile_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/auth/sign_up_account_screen.dart';
 import '../../features/auth/sign_up_profile_screen.dart';
+import '../../features/auth/verify_email_screen.dart';
 import '../../shared/screens/placeholder_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import 'app_routes.dart';
@@ -37,10 +42,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.forgotPassword,
           name: 'forgotPassword',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Forgot password',
-            fallback: AppRoutes.login,
-          ),
+          builder: (context, state) => const ForgotPasswordScreen(),
         ),
         GoRoute(
           path: AppRoutes.signUpAccount,
@@ -55,10 +57,8 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.verifyEmail,
           name: 'verifyEmail',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Verify your email',
-            fallback: AppRoutes.signUpAccount,
-          ),
+          builder: (context, state) =>
+              VerifyEmailScreen(email: state.uri.queryParameters['email']),
         ),
         GoRoute(
           path: AppRoutes.addUniversity,
@@ -85,10 +85,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.addPlace,
           name: 'addPlace',
-          builder: (context, state) => const PlaceholderScreen(
-            title: 'Add place',
-            fallback: AppRoutes.places,
-          ),
+          builder: (context, state) => const AddPlaceScreen(),
         ),
         GoRoute(
           path: AppRoutes.editProfile,
@@ -131,11 +128,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
                 GoRoute(
                   path: AppRoutes.places,
                   name: 'places',
-                  builder: (context, state) => const PlaceholderScreen(
-                    title: 'Places',
-                    showBack: false,
-                    links: {'Add place': AppRoutes.addPlace},
-                  ),
+                  builder: (context, state) => const PlacesScreen(),
                 ),
               ],
             ),
@@ -144,10 +137,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
                 GoRoute(
                   path: AppRoutes.matches,
                   name: 'matches',
-                  builder: (context, state) => const PlaceholderScreen(
-                    title: 'Matches',
-                    showBack: false,
-                  ),
+                  builder: (context, state) => const MatchesScreen(),
                 ),
               ],
             ),

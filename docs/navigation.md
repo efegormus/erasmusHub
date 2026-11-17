@@ -8,17 +8,17 @@ separate routes so the PDF flow is reachable. Dialogs do not get extra routes.
 | Screen | Route | Current implementation |
 | --- | --- | --- |
 | Login | `/login` | Full login UI with inline validation and local logo |
-| Forgot password | `/forgot-password` | Scaffold |
+| Forgot password | `/forgot-password` | Three wireframe states: enter email, link sent with 3-minute lock, resend available (UI only) |
 | Sign up: account | `/sign-up` | Existing account form connected |
 | Sign up: profile | `/sign-up/profile` | Existing profile form connected |
-| Verify email | `/verify-email` | Scaffold |
+| Verify email | `/verify-email` | Waiting (3-minute resend lock) and not-verified states, Change email; optional `?email=` |
 | Home | `/` | Scaffold |
 | University detail | `/universities/:id` | Scaffold, retains Home tab |
 | Post detail | `/posts/:id` | PostDetailScreen, comments and report dialog |
 | New post | `/posts/new?universityId=...` | NewPostScreen, validated form and confirmation |
-| Places | `/places` | Scaffold |
-| Add place | `/places/new` | Scaffold above the bottom bar |
-| Matches | `/matches` | Scaffold |
+| Places | `/places` | City picker, category chips, compact PlaceCards with remove/undo, empty city state |
+| Add place | `/places/new` | Name, city, category, rating, optional comment; inline errors and Place added dialog |
+| Matches | `/matches` | Host university and department pickers, returned students with contact links, empty state |
 | Profile | `/profile` | ProfileScreen with exchange cards and contacts |
 | Edit profile | `/profile/edit` | EditProfileScreen, validation and exchange management |
 | Add exchange | `/profile/exchanges/new` | AddExchangeScreen, add/edit with typed return value |
