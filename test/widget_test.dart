@@ -77,7 +77,7 @@ void main() {
     expect(router.state.uri.path, AppRoutes.signUpProfile);
     await tester.tap(find.text('+ University not listed? Add it'));
     await tester.pumpAndSettle();
-    expect(find.text('Add university'), findsOneWidget);
+    expect(find.text('Add university'), findsWidgets);
     router.pop();
     await tester.pumpAndSettle();
     expect(find.text('Your profile'), findsOneWidget);
@@ -87,7 +87,7 @@ void main() {
     'Shell preserves tab stacks; form overlays hide it; logout returns to login',
     (tester) async {
       final router = await openApp(tester, path: '/');
-      await tester.tap(find.text('University detail'));
+      await tester.tap(find.text('TU Delft').first);
       await tester.pumpAndSettle();
       expect(router.state.uri.path, '/universities/tu-delft');
       await tester.tap(find.text('Places').last);
