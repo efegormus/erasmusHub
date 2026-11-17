@@ -15,35 +15,63 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
-  testWidgets('Places lists cards, filters by category and removes a card', (
+  Future<void> pickFromDropdown<T>(
+    WidgetTester tester,
+    Finder dropdown,
+    String option,
+  ) async {
+    await tester.ensureVisible(dropdown);
+    await tester.tap(dropdown);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(option).last);
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('Places filters by city and category and removes a card', (
     tester,
   ) async {
     largePhone(tester);
     await openApp(tester, path: '/places');
-    expect(find.text('Café Linné'), findsOneWidget);
-
-    final study = find.widgetWithText(ChoiceChip, 'Study spot');
-    await tester.ensureVisible(study);
-    await tester.pumpAndSettle();
-    await tester.tap(study);
-    await tester.pumpAndSettle();
-    expect(find.text('Carolina Rediviva Library'), findsOneWidget);
+    expect(find.text('Dok Coffee'), findsOneWidget);
+    expect(find.text('Café · Delft'), findsWidgets);
+    expect(find.text('4.5'), findsOneWidget);
     expect(find.text('Café Linné'), findsNothing);
 
-    final remove = find.byTooltip('Remove Carolina Rediviva Library');
-    await tester.ensureVisible(remove);
-    await tester.tap(remove);
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Sights'));
     await tester.pumpAndSettle();
-    expect(find.text('Carolina Rediviva Library'), findsNothing);
-    expect(find.text('No places in this category yet.'), findsOneWidget);
+    expect(find.text('Oude Kerk'), findsOneWidget);
+    expect(find.text('Dok Coffee'), findsNothing);
+
+    await tester.tap(find.byTooltip('Remove Oude Kerk'));
+    await tester.pumpAndSettle();
+    expect(find.text('Oude Kerk'), findsNothing);
+    expect(find.text('No Sights places rated in Delft yet.'), findsOneWidget);
     expect(placesStore.value.length, kPlaceholderPlaces.length - 1);
 
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();
-    expect(find.text('Carolina Rediviva Library'), findsOneWidget);
+    expect(find.text('Oude Kerk'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'All'));
+    await pickFromDropdown<String>(
+      tester,
+      find.byType(DropdownButtonFormField<String>),
+      'Uppsala',
+    );
+    expect(find.text('Café Linné'), findsOneWidget);
+    expect(find.text('Dok Coffee'), findsNothing);
+
+    await pickFromDropdown<String>(
+      tester,
+      find.byType(DropdownButtonFormField<String>),
+      'Lund',
+    );
+    expect(find.text('No places rated in Lund yet.'), findsOneWidget);
+    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(find.widgetWithText(OutlinedButton, 'Add place'), findsOneWidget);
   });
 
-  testWidgets('Add place shows inline errors, confirms, then adds the card', (
+  testWidgets('Add place shows inline errors, then a Place added dialog', (
     tester,
   ) async {
     largePhone(tester);
@@ -52,59 +80,45 @@ void main() {
     await tester.pumpAndSettle();
     expect(router.state.uri.path, '/places/new');
 
-    final submit = find.widgetWithText(FilledButton, 'Add place');
-    await tester.ensureVisible(submit);
-    await tester.tap(submit);
+    final save = find.widgetWithText(FilledButton, 'Save place');
+    await tester.ensureVisible(save);
+    await tester.tap(save);
     await tester.pumpAndSettle();
-    expect(find.text('This field is required.'), findsWidgets);
+    expect(find.text('Place name is required.'), findsOneWidget);
+    expect(find.text('Choose a city.'), findsOneWidget);
     expect(find.text('Choose a category.'), findsOneWidget);
-    expect(find.text('Give the place 1 to 5 stars.'), findsOneWidget);
+    expect(find.text('Give 1 to 5 stars.'), findsOneWidget);
     expect(find.byType(AlertDialog), findsNothing);
 
-    final fields = find.byType(TextFormField);
-    await tester.enterText(fields.at(0), 'Fika Corner');
-    await tester.enterText(fields.at(1), 'Uppsala');
-    await tester.enterText(fields.at(2), 'Sweden');
-    await tester.enterText(fields.at(3), 'Too short');
-    await tester.enterText(fields.at(4), 'not a link');
-    await tester.tap(find.byType(DropdownButtonFormField<PlaceCategory>).first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Café').last);
-    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField).first, 'Fika Corner');
+    await pickFromDropdown<String>(
+      tester,
+      find.byType(DropdownButtonFormField<String>),
+      'Uppsala',
+    );
+    await pickFromDropdown<PlaceCategory>(
+      tester,
+      find.byType(DropdownButtonFormField<PlaceCategory>),
+      'Café',
+    );
     await tester.ensureVisible(find.byTooltip('Rate 4 of 5 stars'));
     await tester.tap(find.byTooltip('Rate 4 of 5 stars'));
+    await tester.enterText(find.byType(TextFormField).last, 'Cinnamon buns');
+    await tester.ensureVisible(save);
+    await tester.tap(save);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(submit);
-    await tester.tap(submit);
-    await tester.pumpAndSettle();
-    expect(find.text('Enter at least 10 characters.'), findsOneWidget);
+
+    expect(find.text('Place added'), findsOneWidget);
     expect(
-      find.text('Enter a link starting with http:// or https://'),
+      find.text('Thanks! Your rating is now on the Uppsala list.'),
       findsOneWidget,
     );
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
 
-    await tester.enterText(fields.at(3), 'Great cinnamon buns near campus.');
-    await tester.enterText(fields.at(4), '');
-    await tester.ensureVisible(submit);
-    await tester.tap(submit);
-    await tester.pumpAndSettle();
-    expect(find.text('Add this place?'), findsOneWidget);
-
-    await tester.tap(find.text('Cancel'));
-    await tester.pumpAndSettle();
-    expect(router.state.uri.path, '/places/new');
-
-    await tester.tap(submit);
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.descendant(
-        of: find.byType(AlertDialog),
-        matching: find.text('Add place'),
-      ),
-    );
-    await tester.pumpAndSettle();
     expect(router.state.uri.path, '/places');
     expect(find.text('Fika Corner'), findsOneWidget);
-    expect(placesStore.value.first.name, 'Fika Corner');
+    expect(find.text('Café · Uppsala'), findsWidgets);
+    expect(placesStore.value.first.comment, 'Cinnamon buns');
   });
 }

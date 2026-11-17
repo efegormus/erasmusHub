@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/data/place_data.dart';
 import '../../core/router/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -9,7 +10,8 @@ import '../../models/place.dart';
 import 'place_card.dart';
 import 'places_store.dart';
 
-/// Places (10): student recommendations, filtered by category.
+/// Places (10): places rated by students in the selected city, filtered by
+/// category (wireframe page 11).
 class PlacesScreen extends StatefulWidget {
   const PlacesScreen({super.key});
 
@@ -18,13 +20,14 @@ class PlacesScreen extends StatefulWidget {
 }
 
 class _PlacesScreenState extends State<PlacesScreen> {
+  String _city = kPlaceCities.first;
+
   /// null means "All".
   PlaceCategory? _category;
 
   void _remove(Place place) {
     final index = placesStore.remove(place);
-    final messenger = ScaffoldMessenger.of(context);
-    messenger
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
@@ -39,29 +42,50 @@ class _PlacesScreenState extends State<PlacesScreen> {
       );
   }
 
+  Future<void> _addPlace() async {
+    final added = await context.push<Place>(AppRoutes.addPlace);
+    // Show the list the new place was added to.
+    if (added != null && mounted) {
+      setState(() {
+        _city = added.city;
+        _category = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Places')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutes.addPlace),
-        icon: const Icon(Icons.add_location_alt_outlined),
-        label: const Text('Add place'),
-      ),
-      body: SafeArea(
-        child: ValueListenableBuilder<List<Place>>(
-          valueListenable: placesStore,
-          builder: (context, places, _) {
-            final visible = _category == null
-                ? places
-                : places.where((p) => p.category == _category).toList();
-            return CustomScrollView(
+    return ValueListenableBuilder<List<Place>>(
+      valueListenable: placesStore,
+      builder: (context, places, _) {
+        final visible = places
+            .where(
+              (p) =>
+                  p.city == _city &&
+                  (_category == null || p.category == _category),
+            )
+            .toList();
+        return Scaffold(
+          appBar: AppBar(title: const Text('Places')),
+          floatingActionButton: visible.isEmpty
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: _addPlace,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add place'),
+                ),
+          body: SafeArea(
+            child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _filters()),
                 if (visible.isEmpty)
                   SliverFillRemaining(
                     hasScrollBody: false,
-                    child: _EmptyState(filtered: _category != null),
+                    child: _EmptyState(
+                      city: _city,
+                      category: _category,
+                      onAdd: _addPlace,
+                    ),
                   )
                 else
                   SliverPadding(
@@ -89,38 +113,68 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     ),
                   ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget _filters() {
-    Widget chip(String label, PlaceCategory? value) => Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.sm),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: _category == value,
-        onSelected: (_) => setState(() => _category = value),
-      ),
-    );
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          chip('All', null),
-          for (final c in PlaceCategory.values) chip(c.label, c),
+          DropdownButtonFormField<String>(
+            key: ValueKey(_city),
+            initialValue: _city,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: 'City',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            items: [
+              for (final city in kPlaceCities)
+                DropdownMenuItem(value: city, child: Text(city)),
+            ],
+            onChanged: (city) {
+              if (city != null) setState(() => _city = city);
+            },
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.xs,
+            children: [
+              _chip('All', null),
+              for (final c in PlaceCategory.values) _chip(c.label, c),
+            ],
+          ),
         ],
       ),
     );
   }
+
+  Widget _chip(String label, PlaceCategory? value) => ChoiceChip(
+    label: Text(label),
+    selected: _category == value,
+    showCheckmark: false,
+    onSelected: (_) => setState(() => _category = value),
+  );
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.filtered});
-  final bool filtered;
+  const _EmptyState({
+    required this.city,
+    required this.category,
+    required this.onAdd,
+  });
+  final String city;
+  final PlaceCategory? category;
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -128,22 +182,20 @@ class _EmptyState extends StatelessWidget {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(
-          Icons.place_outlined,
-          size: 48,
-          color: AppColors.textSecondary,
-        ),
+        const Icon(Icons.place, size: 48, color: AppColors.error),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          filtered ? 'No places in this category yet.' : 'No places yet.',
-          style: AppTextStyles.body,
+          category == null
+              ? 'No places rated in $city yet.'
+              : 'No ${category!.label} places rated in $city yet.',
+          style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          'Add the first one with the button below.',
-          style: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
-          textAlign: TextAlign.center,
+        const SizedBox(height: AppSpacing.md),
+        OutlinedButton.icon(
+          onPressed: onAdd,
+          icon: const Icon(Icons.add),
+          label: const Text('Add place'),
         ),
       ],
     ),

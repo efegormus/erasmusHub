@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/data/place_data.dart';
 import '../../core/data/profile_data.dart';
 import '../../core/router/app_routes.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/utils/validators.dart';
 import '../../models/place.dart';
 import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_text_field.dart';
 import '../../shared/widgets/star_rating.dart';
 import 'places_store.dart';
 
-/// Add place (11): form with inline validation and a confirmation dialog.
+/// Add place (11): name, city, category, star rating and an optional
+/// comment, with inline errors and a "Place added" dialog (wireframe page 12).
 class AddPlaceScreen extends StatefulWidget {
   const AddPlaceScreen({super.key});
 
@@ -24,102 +24,70 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
-  final _city = TextEditingController();
-  final _country = TextEditingController();
-  final _description = TextEditingController();
-  final _imageUrl = TextEditingController();
+  final _comment = TextEditingController();
+  String? _city;
   PlaceCategory? _category;
   int _rating = 0;
 
   @override
   void dispose() {
     _name.dispose();
-    _city.dispose();
-    _country.dispose();
-    _description.dispose();
-    _imageUrl.dispose();
+    _comment.dispose();
     super.dispose();
   }
 
-  static String? _validateDescription(String? value) =>
-      Validators.required(value) ?? Validators.minLength(10)(value?.trim());
+  static String? _validateName(String? value) =>
+      value == null || value.trim().isEmpty ? 'Place name is required.' : null;
 
-  static String? _validateImageUrl(String? value) {
-    final text = value?.trim() ?? '';
-    if (text.isEmpty) return null;
-    final uri = Uri.tryParse(text);
-    final ok =
-        uri != null &&
-        (uri.scheme == 'http' || uri.scheme == 'https') &&
-        uri.host.isNotEmpty;
-    return ok ? null : 'Enter a link starting with http:// or https://';
-  }
-
-  void _close() {
+  void _close([Place? added]) {
     if (context.canPop()) {
-      context.pop();
+      context.pop(added);
     } else {
       context.go(AppRoutes.places);
     }
   }
 
-  Future<void> _submit() async {
+  Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+    FocusScope.of(context).unfocus();
     final place = Place(
       id: 'p${DateTime.now().microsecondsSinceEpoch}',
       name: _name.text.trim(),
-      city: _city.text.trim(),
-      country: _country.text.trim(),
+      city: _city!,
       category: _category!,
-      description: _description.text.trim(),
       rating: _rating.toDouble(),
       addedBy: kCurrentUser.name,
-      imageUrl: _imageUrl.text.trim().isEmpty ? null : _imageUrl.text.trim(),
+      comment: _comment.text.trim(),
     );
-    final confirmed = await showDialog<bool>(
+    placesStore.add(place);
+    await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Add this place?'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(place.name, style: AppTextStyles.title),
-              Text(
-                '${place.category.label} · ${place.city}, ${place.country}',
-                style: AppTextStyles.label.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              StarRating(value: place.rating, size: 18),
-              const SizedBox(height: AppSpacing.sm),
-              const Text('Other students will see it on the Places screen.'),
-            ],
-          ),
-        ),
+        title: const Text('Place added'),
+        content: Text('Thanks! Your rating is now on the ${place.city} list.'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Add place'),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
-    if (confirmed != true || !mounted) return;
-    placesStore.add(place);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('${place.name} added')));
-    _close();
+    if (mounted) _close(place);
   }
+
+  InputDecoration _dropdownDecoration(String hint) => InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+  );
 
   @override
   Widget build(BuildContext context) {
+    final errorStyle = TextStyle(
+      color: Theme.of(context).colorScheme.error,
+      fontSize: 12,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add place'),
@@ -139,19 +107,27 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Recommend a place to students going to the same city.',
-                      style: AppTextStyles.label.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
                     AppTextField(
                       label: 'Place name',
-                      hintText: 'e.g. Café Linné',
+                      hintText: 'e.g. Dok Coffee',
                       controller: _name,
                       textInputAction: TextInputAction.next,
-                      validator: Validators.required,
+                      validator: _validateName,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text('City', style: AppTextStyles.label),
+                    const SizedBox(height: 6),
+                    DropdownButtonFormField<String>(
+                      initialValue: _city,
+                      isExpanded: true,
+                      decoration: _dropdownDecoration('Select city'),
+                      items: [
+                        for (final city in kPlaceCities)
+                          DropdownMenuItem(value: city, child: Text(city)),
+                      ],
+                      onChanged: (value) => setState(() => _city = value),
+                      validator: (value) =>
+                          value == null ? 'Choose a city.' : null,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text('Category', style: AppTextStyles.label),
@@ -159,12 +135,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     DropdownButtonFormField<PlaceCategory>(
                       initialValue: _category,
                       isExpanded: true,
-                      hint: const Text('Choose a category'),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+                      decoration: _dropdownDecoration('Café, Food, Sights…'),
                       items: [
                         for (final c in PlaceCategory.values)
                           DropdownMenuItem(value: c, child: Text(c.label)),
@@ -174,26 +145,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                           value == null ? 'Choose a category.' : null,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    AppTextField(
-                      label: 'City',
-                      hintText: 'e.g. Uppsala',
-                      controller: _city,
-                      textInputAction: TextInputAction.next,
-                      validator: Validators.required,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    AppTextField(
-                      label: 'Country',
-                      hintText: 'e.g. Sweden',
-                      controller: _country,
-                      textInputAction: TextInputAction.next,
-                      validator: Validators.required,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
                     Text('Your rating', style: AppTextStyles.label),
                     FormField<int>(
                       validator: (_) =>
-                          _rating == 0 ? 'Give the place 1 to 5 stars.' : null,
+                          _rating == 0 ? 'Give 1 to 5 stars.' : null,
                       builder: (field) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -206,35 +161,19 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                             },
                           ),
                           if (field.hasError)
-                            Text(
-                              field.errorText!,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                                fontSize: 12,
-                              ),
-                            ),
+                            Text(field.errorText!, style: errorStyle),
                         ],
                       ),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AppTextField(
-                      label: 'Why do you recommend it?',
-                      hintText: 'Prices, opening hours, tips…',
-                      controller: _description,
-                      maxLines: 4,
-                      validator: _validateDescription,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    AppTextField(
-                      label: 'Photo link (optional)',
-                      hintText: 'https://…',
-                      controller: _imageUrl,
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      validator: _validateImageUrl,
+                      label: 'Comment (optional)',
+                      hintText: 'What did you like?',
+                      controller: _comment,
+                      maxLines: 3,
                     ),
                     const SizedBox(height: AppSpacing.lg),
-                    AppButton(label: 'Add place', onPressed: _submit),
+                    AppButton(label: 'Save place', onPressed: _save),
                   ],
                 ),
               ),
