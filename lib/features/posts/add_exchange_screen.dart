@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/data/posts_data.dart';
-import '../../core/data/profile_data.dart';
+import '../profile/profile_store.dart';
 import '../../core/router/app_routes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../models/exchange_experience.dart';
-import '../../models/user_profile.dart';
 import 'widgets/confirmation_dialog.dart';
 import 'widgets/form_widgets.dart';
 
@@ -22,7 +21,9 @@ typedef AddExchangeResult = ({
 /// Pops with an [AddExchangeResult] so Edit profile can add it to its list:
 /// `final added = await context.push<AddExchangeResult>(AppRoutes.addExchange);`
 class AddExchangeScreen extends StatefulWidget {
-  const AddExchangeScreen({super.key});
+  const AddExchangeScreen({super.key, this.initialExperience});
+
+  final ExchangeExperience? initialExperience;
 
   @override
   State<AddExchangeScreen> createState() => _AddExchangeScreenState();
@@ -35,39 +36,64 @@ class _AddExchangeScreenState extends State<AddExchangeScreen> {
   ExchangeProgram _program = ExchangeProgram.erasmus;
   ExchangeStatus? _status;
 
+  @override
+  void initState() {
+    super.initState();
+    final existing = widget.initialExperience;
+    if (existing == null) return;
+    for (final university in kHostUniversities) {
+      if (university.name == existing.hostUniversity) {
+        _universityId = university.id;
+      }
+    }
+    _term = existing.term;
+    _program = existing.program;
+    _status = existing.status;
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final university = hostUniversityById(_universityId)!;
     final status = _status!;
     final result = (
       experience: ExchangeExperience(
-        id: 'exp${DateTime.now().microsecondsSinceEpoch}',
+        id:
+            widget.initialExperience?.id ??
+            'exp${DateTime.now().microsecondsSinceEpoch}',
         hostUniversity: university.name,
         city: university.city,
         country: university.country,
         program: _program,
         term: _term!,
-        department: kCurrentUser.department,
+        department: profileStore.value.major,
+        status: status,
       ),
       status: status,
     );
     await showConfirmationDialog(
       context,
-      title: 'Exchange added',
+      title: widget.initialExperience == null
+          ? 'Exchange added'
+          : 'Exchange updated',
       message:
-          '${university.name} was added to your Erasmus+/Exchange experiences.',
+          '${university.name} was saved to your Erasmus+/Exchange experiences.',
     );
     if (!mounted) return;
     if (context.canPop()) {
       context.pop(result);
     } else {
+      profileStore.addExperience(result.experience);
       context.go(AppRoutes.editProfile);
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Add exchange')),
+    appBar: AppBar(
+      title: Text(
+        widget.initialExperience == null ? 'Add exchange' : 'Edit exchange',
+      ),
+    ),
     body: SafeArea(
       child: Align(
         alignment: Alignment.topCenter,
@@ -137,7 +163,7 @@ class _AddExchangeScreenState extends State<AddExchangeScreen> {
                         'e.g. Spring 2025',
                       ),
                       items: [
-                        for (final term in kTerms)
+                        for (final term in {...kTerms, ?_term})
                           DropdownMenuItem(value: term, child: Text(term)),
                       ],
                       onChanged: (value) => _term = value,
@@ -147,6 +173,7 @@ class _AddExchangeScreenState extends State<AddExchangeScreen> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   FormField<ExchangeStatus>(
+                    initialValue: _status,
                     validator: (value) =>
                         value == null ? 'Choose Going or Returned.' : null,
                     builder: (field) => LabeledField(

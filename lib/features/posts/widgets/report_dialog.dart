@@ -22,6 +22,7 @@ class _ReportDialogState extends State<_ReportDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    scrollable: true,
     title: Text(
       'Report this post?',
       textAlign: TextAlign.center,

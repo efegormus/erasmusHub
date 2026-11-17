@@ -51,6 +51,38 @@ The following features may be implemented if time permits:
 | Cloud Firestore | Cloud-based data storage |
 | Git & GitHub | Version control and team collaboration |
 
+## Run locally
+
+Verified on **Flutter 3.47.6 stable** with **Dart 3.13.5**. The pubspec requires
+Dart `^3.13.5`. Use the same Flutter version for reproducible team checks and keep
+`pubspec.lock` committed.
+
+```sh
+flutter --version
+flutter pub get
+flutter devices
+flutter run -d <device-id>
+```
+
+Start an Android emulator or connect a phone first. Android needs the Android SDK
+and accepted SDK licenses (`flutter doctor --android-licenses`). For iOS on macOS,
+install full Xcode, select its developer tools and start an iOS simulator.
+`flutter doctor -v` reports missing platform prerequisites. Only Android and iOS
+platform folders are included; Chrome/macOS desktop are not configured targets.
+If exactly one supported device is connected, `flutter run` is enough.
+
+```sh
+flutter analyze
+flutter test
+flutter build apk --debug  # requires the Android toolchain
+```
+
+This is an **in-memory UI prototype**. Login validates the form and opens Home;
+Firebase authentication, email delivery and Firestore persistence are not wired.
+Sample profile/posts reset on restart. Post detail, New post, Add exchange and
+profile screens are connected; remaining feature scaffolds are listed in
+[the route contract](docs/navigation.md).
+
 ## 🗃️ Data Management
 
 The application is planned to use Firebase Authentication and Cloud Firestore.
@@ -96,7 +128,7 @@ The project aims to follow applicable data protection requirements, including KV
 
 ## 📌 Project Status
 
-**Current Phase: Flutter Foundation Setup**
+**Current Phase: Step 2.1 – UI Prototype Integration**
 
 The Flutter application now lives at the repository root, with Android/iOS scaffolding, routing, shared theme, local Poppins fonts, and form validators. See [development setup](docs/README.md) for run commands and project structure.
 

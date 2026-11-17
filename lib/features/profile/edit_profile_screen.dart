@@ -9,6 +9,7 @@ import '../../core/utils/validators.dart';
 import '../../models/exchange_experience.dart';
 import '../../models/user_profile.dart';
 import 'profile_store.dart';
+import '../posts/add_exchange_screen.dart';
 import 'widgets/experience_card.dart';
 
 /// Profile (edit mode): details form, experience cards with remove, contacts.
@@ -79,6 +80,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
   }
 
+  Future<void> _openExchange([ExchangeExperience? existing]) async {
+    final result = await context.push<AddExchangeResult>(
+      AppRoutes.addExchange,
+      extra: existing,
+    );
+    if (!mounted || result == null) return;
+    final experience = result.experience.copyWith(status: result.status);
+    if (existing == null) {
+      profileStore.addExperience(experience);
+    } else {
+      profileStore.update(
+        profileStore.value.copyWith(
+          experiences: [
+            for (final item in profileStore.value.experiences)
+              if (item.id == existing.id) experience else item,
+          ],
+        ),
+      );
+    }
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     profileStore.update(
@@ -106,7 +128,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
     if (!mounted) return;
-    context.pop();
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoutes.profile);
+    }
   }
 
   Future<void> _deleteAccount() async {
@@ -216,10 +242,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 child: ExperienceCard(
                                   experience: experience,
-                                  onEdit: () => context.push(
-                                    AppRoutes.addExchange,
-                                    extra: experience,
-                                  ),
+                                  onEdit: () => _openExchange(experience),
                                   onDelete: () => _removeExperience(experience),
                                 ),
                               ),
@@ -230,7 +253,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextButton.icon(
-                        onPressed: () => context.push(AppRoutes.addExchange),
+                        onPressed: () => _openExchange(),
                         icon: const Icon(Icons.add),
                         label: const Text('Add exchange'),
                       ),

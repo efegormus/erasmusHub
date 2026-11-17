@@ -38,9 +38,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   void _addComment() {
     final text = _commentController.text.trim();
+    if (text.isEmpty || _post == null) return;
     if (text.isEmpty) return;
     setState(() {
-      _post!.comments.add(
+      _post.comments.add(
         Comment(
           id: 'c${DateTime.now().microsecondsSinceEpoch}',
           author: kCurrentUser.name,
