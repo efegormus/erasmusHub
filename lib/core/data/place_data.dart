@@ -13,6 +13,7 @@ final List<String> kPlaceCities = [
 const List<Place> kPlaceholderPlaces = [
   Place(
     id: 'p1',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p1/160/160',
     name: 'Dok Coffee',
     city: 'Delft',
     category: PlaceCategory.cafe,
@@ -22,6 +23,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p2',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p2/160/160',
     name: 'Kantine Oost',
     city: 'Delft',
     category: PlaceCategory.food,
@@ -30,6 +32,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p3',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p3/160/160',
     name: 'Oude Kerk',
     city: 'Delft',
     category: PlaceCategory.sights,
@@ -38,6 +41,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p4',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p4/160/160',
     name: 'Café Kobus Kuch',
     city: 'Delft',
     category: PlaceCategory.cafe,
@@ -54,6 +58,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p6',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p6/160/160',
     name: 'Café Linné',
     city: 'Uppsala',
     category: PlaceCategory.cafe,
@@ -62,6 +67,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p7',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p7/160/160',
     name: 'Uppsala Cathedral',
     city: 'Uppsala',
     category: PlaceCategory.sights,
@@ -70,6 +76,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p8',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p8/160/160',
     name: 'Mercato Centrale',
     city: 'Milan',
     category: PlaceCategory.food,
@@ -78,6 +85,7 @@ const List<Place> kPlaceholderPlaces = [
   ),
   Place(
     id: 'p9',
+    imageUrl: 'https://picsum.photos/seed/erasmushub-p9/160/160',
     name: 'Café Central',
     city: 'Vienna',
     category: PlaceCategory.cafe,

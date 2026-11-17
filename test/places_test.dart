@@ -36,6 +36,17 @@ void main() {
     expect(find.text('Café · Delft'), findsWidgets);
     expect(find.text('4.5'), findsOneWidget);
     expect(find.text('Café Linné'), findsNothing);
+    // Thumbnails: network photos (tests return HTTP 400, so the error
+    // builder shows the local logo) and the local logo when a place has
+    // no photo link.
+    expect(
+      find.byWidgetPredicate((w) => w is Image && w.image is NetworkImage),
+      findsWidgets,
+    );
+    expect(
+      find.byWidgetPredicate((w) => w is Image && w.image is AssetImage),
+      findsWidgets,
+    );
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'Sights'));
     await tester.pumpAndSettle();

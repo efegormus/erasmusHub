@@ -8,7 +8,7 @@ import '../../shared/widgets/app_card.dart';
 import '../../shared/widgets/star_rating.dart';
 
 /// Compact card for one place, as on wireframe page 11:
-/// name, "Category · City" and the star rating with its number.
+/// thumbnail, name, "Category · City" and the star rating with its number.
 /// The remove action covers the "Card with a working remove" requirement.
 class PlaceCard extends StatelessWidget {
   const PlaceCard({super.key, required this.place, this.onRemove});
@@ -28,6 +28,8 @@ class PlaceCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _Thumbnail(place: place),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +80,49 @@ class PlaceCard extends StatelessWidget {
               onPressed: onRemove,
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// 56×56 photo: network image with a spinner while loading and the
+/// local logo when the link is missing or fails.
+class _Thumbnail extends StatelessWidget {
+  const _Thumbnail({required this.place});
+  final Place place;
+
+  static const _size = 56.0;
+  static const _fallback = Image(
+    image: AssetImage('assets/images/erasmus_hub_logo.png'),
+    fit: BoxFit.contain,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final url = place.imageUrl;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: SizedBox.square(
+        dimension: _size,
+        child: ColoredBox(
+          color: AppColors.background,
+          child: url == null || url.trim().isEmpty
+              ? _fallback
+              : Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                  semanticLabel: 'Photo of ${place.name}',
+                  loadingBuilder: (context, child, progress) => progress == null
+                      ? child
+                      : const Center(
+                          child: SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                  errorBuilder: (context, error, stack) => _fallback,
+                ),
+        ),
       ),
     );
   }

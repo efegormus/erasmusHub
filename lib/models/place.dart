@@ -19,6 +19,7 @@ class Place {
     required this.rating,
     required this.addedBy,
     this.comment = '',
+    this.imageUrl,
   }) : assert(rating >= 0 && rating <= 5);
 
   final String id;
@@ -34,4 +35,8 @@ class Place {
 
   /// Optional comment. Empty when not set.
   final String comment;
+
+  /// Network photo for the card thumbnail; the local logo is shown when it
+  /// is missing or fails to load.
+  final String? imageUrl;
 }
