@@ -78,6 +78,7 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
         title: Text(university.name),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'university-write-post',
         onPressed: _writePost,
         icon: const Icon(Icons.add),
         label: const Text('Write post'),
