@@ -55,7 +55,11 @@ class _AddUniversityScreenState extends State<AddUniversityScreen> {
       setState(() => _autovalidate = AutovalidateMode.onUserInteraction);
       return;
     }
-    _saving = true;
+    // Stop live validation, otherwise the saved name shows as a duplicate.
+    setState(() {
+      _saving = true;
+      _autovalidate = AutovalidateMode.disabled;
+    });
     final university = addPlaceholderUniversity(
       name: _name.text,
       city: _city.text,
