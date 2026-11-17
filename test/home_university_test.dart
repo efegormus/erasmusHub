@@ -171,10 +171,25 @@ void main() {
     await tester.tap(submit);
     await tester.pumpAndSettle();
     expect(find.text('University added'), findsOneWidget);
+    // The saved name must not be flagged as a duplicate behind the dialog.
+    expect(find.text('This university is already in the list.'), findsNothing);
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
     expect(router.state.uri.path, '/');
     expect(universityNameExists('University of Graz'), isTrue);
+  });
+
+  testWidgets('Add university clears errors while the user fixes fields', (
+    tester,
+  ) async {
+    await openScreens(tester, '/add-university');
+    await tester.tap(find.widgetWithText(FilledButton, 'Add university'));
+    await tester.pumpAndSettle();
+    expect(find.text('This field is required.'), findsNWidgets(2));
+
+    await tester.enterText(find.byType(TextFormField).last, 'Graz');
+    await tester.pumpAndSettle();
+    expect(find.text('This field is required.'), findsOneWidget);
   });
 
   for (final size in [const Size(320, 568), const Size(360, 640)]) {
