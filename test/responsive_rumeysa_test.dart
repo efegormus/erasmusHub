@@ -47,10 +47,35 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await openApp(tester, path: '/places/new');
-    final submit = find.widgetWithText(FilledButton, 'Add place');
-    await tester.ensureVisible(submit);
-    await tester.tap(submit);
+    final save = find.widgetWithText(FilledButton, 'Save place');
+    await tester.ensureVisible(save);
+    await tester.tap(save);
     await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Forgot and Verify second states fit on a tiny phone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 568);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await openApp(tester, path: '/forgot-password');
+    await tester.enterText(
+      find.byType(TextFormField),
+      'name.surname@sabanciuniv.edu',
+    );
+    await tester.ensureVisible(find.text('Send reset link'));
+    await tester.tap(find.text('Send reset link'));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+
+    await openApp(tester, path: '/verify-email?email=a%40sabanciuniv.edu');
+    await tester.ensureVisible(find.text('I verified my email'));
+    await tester.tap(find.text('I verified my email'));
+    await tester.pump();
     expect(tester.takeException(), isNull);
   });
 }
