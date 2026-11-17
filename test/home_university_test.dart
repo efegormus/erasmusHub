@@ -90,7 +90,11 @@ void main() {
     await openScreens(tester, '/');
     await tester.tap(find.text('Country'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Sweden').last);
+    // The bottom sheet may need scrolling on a short test screen.
+    final sweden = find.text('Sweden', skipOffstage: false).last;
+    await tester.ensureVisible(sweden);
+    await tester.pumpAndSettle();
+    await tester.tap(sweden);
     await tester.pumpAndSettle();
     expect(find.byType(UniversityCard), findsNWidgets(2));
     expect(find.text('Uppsala University'), findsOneWidget);
