@@ -4,32 +4,32 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../models/student.dart';
-import '../../models/user_profile.dart';
 import '../../shared/widgets/app_card.dart';
 import '../../shared/widgets/user_avatar.dart';
 
-/// Card for one student: network avatar (initials when it fails),
-/// home university, destination, term, status and a connect button.
+/// Card for one matched student (wireframe page 13): name, status,
+/// "Department · Home university", term and optional contact links.
+/// The avatar is a network image with an initials fallback.
 class StudentCard extends StatelessWidget {
-  const StudentCard({
-    super.key,
-    required this.student,
-    this.requested = false,
-    this.onConnect,
-  });
+  const StudentCard({super.key, required this.student, this.onContact});
 
   final Student student;
 
-  /// True after the user tapped Connect; the button then shows "Requested".
-  final bool requested;
-  final VoidCallback? onConnect;
+  /// Called with the tapped link label ("Instagram", "LinkedIn", "Phone")
+  /// and its value.
+  final void Function(String label, String value)? onContact;
 
   @override
   Widget build(BuildContext context) {
     final secondary = AppTextStyles.label.copyWith(
       color: AppColors.textSecondary,
+      fontWeight: FontWeight.w400,
     );
-    final returned = student.status == ExchangeStatus.returned;
+    final contacts = {
+      'Instagram': student.instagram,
+      'LinkedIn': student.linkedin,
+      'Phone': student.phone,
+    }..removeWhere((_, value) => value.isEmpty);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -40,79 +40,65 @@ class StudentCard extends StatelessWidget {
               UserAvatar(
                 name: student.name,
                 imageUrl: student.avatarUrl,
-                radius: 28,
+                radius: 20,
               ),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(student.name, style: AppTextStyles.title),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              student.name,
+                              style: AppTextStyles.body.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Chip(
+                          label: Text(student.status.label),
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
                     Text(
                       '${student.department} · ${student.homeUniversity}',
                       style: secondary,
                     ),
+                    Text(student.term, style: secondary),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          _InfoRow(icon: Icons.school_outlined, text: student.hostUniversity),
-          const SizedBox(height: AppSpacing.xs),
-          _InfoRow(
-            icon: Icons.place_outlined,
-            text: '${student.hostCity}, ${student.hostCountry}',
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          _InfoRow(icon: Icons.event_outlined, text: student.term),
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              Chip(
-                avatar: Icon(
-                  returned ? Icons.flight_land : Icons.flight_takeoff,
-                  size: 18,
-                ),
-                label: Text(student.status.label),
-                visualDensity: VisualDensity.compact,
-              ),
-              if (onConnect != null)
-                requested
-                    ? OutlinedButton.icon(
-                        onPressed: null,
-                        icon: const Icon(Icons.check),
-                        label: const Text('Requested'),
-                      )
-                    : FilledButton.icon(
-                        onPressed: onConnect,
-                        icon: const Icon(Icons.person_add_alt_1_outlined),
-                        label: const Text('Connect'),
-                      ),
-            ],
-          ),
+          if (contacts.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                for (final entry in contacts.entries)
+                  ActionChip(
+                    label: Text(entry.key),
+                    visualDensity: VisualDensity.compact,
+                    onPressed: onContact == null
+                        ? null
+                        : () => onContact!(entry.key, entry.value),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
     );
   }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.icon, required this.text});
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Icon(icon, size: 18, color: AppColors.secondary),
-      const SizedBox(width: AppSpacing.sm),
-      Expanded(child: Text(text, style: AppTextStyles.label)),
-    ],
-  );
 }
