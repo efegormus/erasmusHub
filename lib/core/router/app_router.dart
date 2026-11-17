@@ -8,7 +8,9 @@ import '../../models/exchange_experience.dart';
 
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/forgot_password_screen.dart';
+import '../../features/home/add_university_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/home/university_detail_screen.dart';
 import '../../features/matches/matches_screen.dart';
 import '../../features/places/add_place_screen.dart';
 import '../../features/places/places_screen.dart';
@@ -61,8 +63,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
         GoRoute(
           path: AppRoutes.addUniversity,
           name: 'addUniversity',
-          builder: (context, state) =>
-              const PlaceholderScreen(title: 'Add university'),
+          builder: (context, state) => const AddUniversityScreen(),
         ),
         // Forms and Post detail cover the shell, as in the PDF mockups.
         GoRoute(
@@ -113,15 +114,9 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
                     GoRoute(
                       path: 'universities/:id',
                       name: 'universityDetail',
-                      builder: (context, state) => PlaceholderScreen(
-                        title: 'University detail',
-                        detail: state.pathParameters['id'],
-                        links: {
-                          'Post detail': AppRoutes.post('post1'),
-                          'Write post': AppRoutes.newPost(
-                            state.pathParameters['id']!,
-                          ),
-                        },
+                      builder: (context, state) => UniversityDetailScreen(
+                        key: ValueKey(state.pathParameters['id']),
+                        universityId: state.pathParameters['id']!,
                       ),
                     ),
                   ],
