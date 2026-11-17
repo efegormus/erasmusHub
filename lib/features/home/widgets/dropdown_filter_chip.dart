@@ -21,6 +21,8 @@ class DropdownFilterChip extends StatelessWidget {
   static const _clear = '';
 
   Future<void> _pick(BuildContext context) async {
+    // Keep the keyboard from reopening on the search field after picking.
+    FocusManager.instance.primaryFocus?.unfocus();
     final result = await showModalBottomSheet<String>(
       context: context,
       // Open above the bottom navigation bar so no option is hidden.
