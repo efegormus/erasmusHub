@@ -23,6 +23,8 @@ class DropdownFilterChip extends StatelessWidget {
   Future<void> _pick(BuildContext context) async {
     final result = await showModalBottomSheet<String>(
       context: context,
+      // Open above the bottom navigation bar so no option is hidden.
+      useRootNavigator: true,
       showDragHandle: true,
       builder: (context) => SafeArea(
         child: ListView(
