@@ -65,12 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
   });
 
   Future<void> _openUniversity(String id) async {
+    // Drop search focus so the keyboard does not reopen on return.
+    FocusManager.instance.primaryFocus?.unfocus();
     await context.push(AppRoutes.university(id));
     // Post counts and ratings may have changed (e.g. a new post).
     if (mounted) setState(() {});
   }
 
   Future<void> _openAddUniversity() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     await context.push(AppRoutes.addUniversity);
     if (mounted) setState(() {});
   }
