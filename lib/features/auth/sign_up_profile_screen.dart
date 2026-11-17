@@ -93,7 +93,10 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
                           return const Iterable<String>.empty();
                         }
                         return _universities.where(
-                          (u) => u.toLowerCase().contains(query),
+                              (u) => u
+                              .toLowerCase()
+                              .split(' ')
+                              .any((word) => word.startsWith(query)),
                         );
                       },
                       fieldViewBuilder:
