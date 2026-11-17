@@ -126,21 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Center(
-                    child: TextButton.icon(
-                      onPressed: _openAddUniversity,
-                      icon: const Icon(Icons.add),
-                      label: const Text(
-                        "Can't find your university? Add it",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
             ],
           ],
         ),
