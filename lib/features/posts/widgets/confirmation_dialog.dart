@@ -11,6 +11,7 @@ Future<void> showConfirmationDialog(
   context: context,
   barrierDismissible: false,
   builder: (context) => AlertDialog(
+    scrollable: true,
     title: Text(title, textAlign: TextAlign.center, style: AppTextStyles.title),
     content: Text(message, textAlign: TextAlign.center),
     actionsAlignment: MainAxisAlignment.center,

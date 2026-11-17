@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     title: 'Find your destination',
     showBack: false,
     links: {
-      'University detail': AppRoutes.university('preview'),
+      'University detail': AppRoutes.university('tu-delft'),
       'Add university': AppRoutes.addUniversity,
     },
   );

@@ -89,7 +89,7 @@ void main() {
       final router = await openApp(tester, path: '/');
       await tester.tap(find.text('University detail'));
       await tester.pumpAndSettle();
-      expect(router.state.uri.path, '/universities/preview');
+      expect(router.state.uri.path, '/universities/tu-delft');
       await tester.tap(find.text('Places').last);
       await tester.pumpAndSettle();
       expect(
@@ -103,7 +103,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Home').last);
       await tester.pumpAndSettle();
-      expect(router.state.uri.path, '/universities/preview');
+      expect(router.state.uri.path, '/universities/tu-delft');
       await tester.tap(find.text('Home').last);
       await tester.pumpAndSettle();
       expect(router.state.uri.path, '/');
@@ -131,7 +131,7 @@ void main() {
     '/verify-email': 'Verify your email',
     '/': 'Find your destination',
     '/universities/example': 'University detail',
-    '/posts/example': 'Post detail',
+    '/posts/post1': 'TU Delft',
     '/posts/new?universityId=example': 'New post',
     '/places': 'Places',
     '/places/new': 'Add place',

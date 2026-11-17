@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/data/posts_data.dart';
-import '../../core/data/profile_data.dart';
+import '../profile/profile_store.dart';
 import '../../core/router/app_routes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -66,9 +66,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
       universityId: university.id,
       universityName: university.name,
       title: _titleFor(university.name, tip),
-      author: kCurrentUser.name,
+      author: profileStore.value.name,
       term: _term!,
-      major: kCurrentUser.department,
+      major: profileStore.value.major,
       program: _program,
       courses: _parseCourses(),
       ratings: Map.of(_ratings),
@@ -177,11 +177,26 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   Text('Ratings', style: AppTextStyles.label),
                   const SizedBox(height: AppSpacing.xs),
                   for (final category in RatingCategory.values)
-                    RatingRow(
-                      label: category.label,
-                      value: _ratings[category] ?? 0,
-                      onChanged: (value) =>
-                          setState(() => _ratings[category] = value),
+                    FormField<int>(
+                      initialValue: _ratings[category] ?? 0,
+                      validator: (value) =>
+                          value == null || value < 1 || value > 5
+                          ? 'Give 1 to 5 stars.'
+                          : null,
+                      builder: (field) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RatingRow(
+                            label: category.label,
+                            value: field.value ?? 0,
+                            onChanged: (value) {
+                              _ratings[category] = value;
+                              field.didChange(value);
+                            },
+                          ),
+                          if (field.hasError) FieldError(field.errorText!),
+                        ],
+                      ),
                     ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
