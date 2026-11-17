@@ -27,6 +27,8 @@ class _AddUniversityScreenState extends State<AddUniversityScreen> {
   String? _country;
   /// Blocks a second submit while the confirmation dialog is open.
   bool _saving = false;
+  /// After the first submit, errors update while the user edits.
+  AutovalidateMode _autovalidate = AutovalidateMode.disabled;
 
   @override
   void dispose() {
@@ -48,7 +50,11 @@ class _AddUniversityScreenState extends State<AddUniversityScreen> {
       value == null ? 'Please select a country.' : null;
 
   Future<void> _submit() async {
-    if (_saving || !_formKey.currentState!.validate()) return;
+    if (_saving) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _autovalidate = AutovalidateMode.onUserInteraction);
+      return;
+    }
     _saving = true;
     final university = addPlaceholderUniversity(
       name: _name.text,
@@ -92,6 +98,7 @@ class _AddUniversityScreenState extends State<AddUniversityScreen> {
             constraints: const BoxConstraints(maxWidth: 480),
             child: Form(
               key: _formKey,
+              autovalidateMode: _autovalidate,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
