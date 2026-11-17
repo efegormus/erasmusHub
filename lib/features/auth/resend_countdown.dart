@@ -12,9 +12,10 @@ class ResendCountdown extends ValueNotifier<int> {
 
   bool get isRunning => value > 0;
 
-  /// "2:59" style label of the remaining time.
+  /// "02:59" style label of the remaining time.
   String get label =>
-      '${value ~/ 60}:${(value % 60).toString().padLeft(2, '0')}';
+      '${(value ~/ 60).toString().padLeft(2, '0')}:'
+      '${(value % 60).toString().padLeft(2, '0')}';
 
   void start() {
     _timer?.cancel();
@@ -27,6 +28,12 @@ class ResendCountdown extends ValueNotifier<int> {
         value--;
       }
     });
+  }
+
+  /// Ends the countdown early so "send again" becomes available.
+  void stop() {
+    _timer?.cancel();
+    value = 0;
   }
 
   @override
