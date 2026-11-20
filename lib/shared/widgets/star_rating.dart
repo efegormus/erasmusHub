@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_colors.dart';
+
 /// Controlled 1–5 star input, or fractional read-only rating when onChanged is null.
 class StarRating extends StatelessWidget {
   const StarRating({
@@ -23,7 +25,7 @@ class StarRating extends StatelessWidget {
             ? Icons.star_half
             : Icons.star_border,
         size: size,
-        color: Theme.of(context).colorScheme.primary,
+        color: AppColors.rating,
       );
       return onChanged == null
           ? icon

@@ -79,9 +79,9 @@ flutter build apk --debug  # requires the Android toolchain
 
 This is an **in-memory UI prototype**. Login validates the form and opens Home;
 Firebase authentication, email delivery and Firestore persistence are not wired.
-Sample profile/posts reset on restart. Post detail, New post, Add exchange and
-profile screens are connected; remaining feature scaffolds are listed in
-[the route contract](docs/navigation.md).
+Sample data and edits reset on restart. All 16 feature routes are connected,
+including Home, university forms, Places, Matches and auth recovery. See
+[the route contract](docs/navigation.md) for screen behavior and integration checks.
 
 ## 🗃️ Data Management
 
