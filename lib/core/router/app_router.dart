@@ -15,6 +15,7 @@ import '../../features/matches/matches_screen.dart';
 import '../../features/places/add_place_screen.dart';
 import '../../features/places/places_screen.dart';
 import '../../features/profile/edit_profile_screen.dart';
+import '../../features/profile/my_posts_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/auth/sign_up_account_screen.dart';
 import '../../features/auth/sign_up_profile_screen.dart';
@@ -91,6 +92,11 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) =>
           path: AppRoutes.editProfile,
           name: 'editProfile',
           builder: (context, state) => const EditProfileScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.myPosts,
+          name: 'myPosts',
+          builder: (context, state) => const MyPostsScreen(),
         ),
         GoRoute(
           path: AppRoutes.addExchange,
