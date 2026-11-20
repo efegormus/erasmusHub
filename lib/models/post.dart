@@ -22,6 +22,7 @@ class Post {
     required this.universityName,
     required this.title,
     required this.author,
+    this.authorId,
     required this.term,
     required this.major,
     required this.program,
@@ -36,6 +37,9 @@ class Post {
   final String universityName;
   final String title;
   final String author;
+
+  /// Stable account identifier used to filter the current user's posts.
+  final String? authorId;
 
   /// e.g. "Fall 2025"
   final String term;

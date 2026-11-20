@@ -105,14 +105,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       TextButton(
-                        onPressed: () => ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'My posts will be available later.',
-                                ),
-                              ),
-                            ),
+                        onPressed: () => context.push(AppRoutes.myPosts),
                         child: const Text('My posts'),
                       ),
                       TextButton(

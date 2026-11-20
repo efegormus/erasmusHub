@@ -67,6 +67,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       universityName: university.name,
       title: _titleFor(university.name, tip),
       author: profileStore.value.name,
+      authorId: profileStore.value.id,
       term: _term!,
       major: profileStore.value.major,
       program: _program,

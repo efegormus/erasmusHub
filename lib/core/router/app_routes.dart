@@ -11,6 +11,7 @@ abstract final class AppRoutes {
   static const matches = '/matches';
   static const profile = '/profile';
   static const editProfile = '/profile/edit';
+  static const myPosts = '/profile/posts';
   static const addExchange = '/profile/exchanges/new';
   static const addUniversity = '/add-university';
   static String university(String id) =>
