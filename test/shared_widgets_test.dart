@@ -1,3 +1,4 @@
+import 'package:erasmus_hub/core/theme/app_colors.dart';
 import 'package:erasmus_hub/shared/widgets/app_button.dart';
 import 'package:erasmus_hub/shared/widgets/app_card.dart';
 import 'package:erasmus_hub/shared/widgets/star_rating.dart';
@@ -46,6 +47,11 @@ void main() {
     expect(taps, 1);
     expect(rating, 5);
     expect(find.byIcon(Icons.star_half), findsOneWidget);
+    final stars = tester.widgetList<Icon>(
+      find.descendant(of: find.byType(StarRating), matching: find.byType(Icon)),
+    );
+    expect(stars, hasLength(10));
+    expect(stars.every((star) => star.color == AppColors.rating), isTrue);
   });
   testWidgets(
     'Avatar uses initials, empty-name fallback and failed-image fallback',

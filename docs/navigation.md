@@ -1,4 +1,4 @@
-# Navigation and integration — through November 18 milestone
+# Navigation and integration — November 20 review
 
 Source: the user-supplied `CS310_Group25_Step2.1.pdf`, especially the flow on
 page 1 and login states on page 2. The task list says 15 routes, but the PDF has
@@ -12,8 +12,8 @@ separate routes so the PDF flow is reachable. Dialogs do not get extra routes.
 | Sign up: account | `/sign-up` | Existing account form connected |
 | Sign up: profile | `/sign-up/profile` | Existing profile form connected |
 | Verify email | `/verify-email` | Waiting (3-minute resend lock) and not-verified states, Change email; optional `?email=` |
-| Home | `/` | Scaffold |
-| University detail | `/universities/:id` | Scaffold, retains Home tab |
+| Home | `/` | Search, country/city filters, top-rated sort and university cards |
+| University detail | `/universities/:id` | UniversityDetailScreen, ratings, posts/places tabs and preselected New post; retains Home tab |
 | Post detail | `/posts/:id` | PostDetailScreen, comments and report dialog |
 | New post | `/posts/new?universityId=...` | NewPostScreen, validated form and confirmation |
 | Places | `/places` | City picker, category chips, compact PlaceCards with remove/undo, empty city state |
@@ -22,7 +22,7 @@ separate routes so the PDF flow is reachable. Dialogs do not get extra routes.
 | Profile | `/profile` | ProfileScreen with exchange cards and contacts |
 | Edit profile | `/profile/edit` | EditProfileScreen, validation and exchange management |
 | Add exchange | `/profile/exchanges/new` | AddExchangeScreen, add/edit with typed return value |
-| Add university | `/add-university` | Scaffold reachable from Home and sign-up |
+| Add university | `/add-university` | Validated form, duplicate-name check and confirmation; reachable from Home and sign-up |
 
 `AppRoutes` defines links; dynamic IDs are URL encoded. Named routes are also
 available in `app_router.dart`. `/posts/new` is registered before the dynamic
@@ -34,9 +34,7 @@ The bottom bar has exactly the PDF's four destinations: Home, Places, Matches,
 Profile. `StatefulShellRoute.indexedStack` preserves each tab's navigation stack.
 Tapping the selected tab again returns it to its root. Main screens and university
 detail keep the bottom bar; auth, forms and post detail use the root navigator.
-Back from a pushed form restores its caller. Directly opened scaffolds provide a
-fallback back destination. Feature teams replace the scaffold bodies without
-changing this contract. Preview links use the sample IDs `tu-delft` and `post1`.
+Back from a pushed form restores its caller. Directly opened forms provide a fallback back destination. Preview links use the sample IDs `tu-delft` and `post1`.
 
 ## Login and common widgets
 
@@ -55,7 +53,7 @@ password visibility, scrolling and autofill are supported.
 This is the Step 2.1 **UI prototype**, not Firebase authentication. As specified
 in the PDF, valid Log in opens Home; no backend login, real session, password
 reset, verification email or authorization boundary is claimed. Direct routes
-remain available for feature development. Remaining scaffolds are explicitly listed in the table above. Post/profile edits are
+remain available for feature development. All 16 routes now connect to feature screens. Data edits are
 in memory only; confirmations and reporting do not represent backend writes.
 
 Shared widgets live under `lib/shared/widgets/`:
@@ -64,7 +62,7 @@ Shared widgets live under `lib/shared/widgets/`:
 - `AppTextField`: accessible external label, controller, inline validator, input action,
   autofill, suffix action and multiline support.
 - `AppCard`: padded card with optional tappable Material surface.
-- `StarRating`: read-only fractional stars or controlled accessible 1–5 input.
+- `StarRating`: read-only fractional stars or controlled accessible 1–5 input, using the shared gold rating color.
 - `UserAvatar`: image with Unicode initials fallback, including failed image loads.
 
 ## Validation
@@ -111,6 +109,39 @@ Final verification on 2026-11-17 (Flutter 3.47.6 / Dart 3.13.5):
 - `flutter build apk --debug`: successful Android debug APK.
 - iOS build/device testing not run: full Xcode is not installed.
 
-Integration is delivered on `feat/efe-final-integration`; this does not claim that
-this branch has already been merged into main. Previous infrastructure/navigation
-and profile PRs #1–7 are already present in the main revision used here.
+## November 20 integration review
+
+Efe's integration was merged in PR #8. Main through PR #15 includes Home,
+University detail, Add university, Places, Matches and auth recovery screens.
+The Home router changes from PR #12 are already merged; the separate
+`EFE_router_home_screens.patch` is no longer needed. PR #12's description still
+contains the old router handoff and should be updated on GitHub.
+
+Remote history was rewritten. Efe's three milestone commit trees are unchanged:
+`5016d60` → `50ff66c`, `f3ce410` → `96a4121`, `ef27377` → `313bb67`.
+The Efe author attribution is retained. The local backup branch
+`backup/efe-before-nov20-review` preserves the previous history.
+
+The pending yellow-star change is applied centrally in `StarRating`, including
+read-only, fractional and interactive ratings. Existing feature routes remain
+connected. November 17 results above are historical, not the current test count.
+
+Current verification on 2026-11-20 (main `db3d309` plus this review):
+
+- `flutter analyze`: no issues.
+- `flutter test`: 127 passed, including shared rating color and interaction checks.
+- `flutter build apk --debug`: successful Android debug APK.
+
+The missing Add university confirmation reference is captured below at 390×844.
+This is a Flutter widget render, not an Android emulator screenshot.
+
+![University added confirmation](screenshots/university-added.png)
+
+Suggested handoff paragraph:
+
+> Home supports search, country/city filters and top-rated sorting. University
+> detail displays category ratings and posts, and opens New post with the
+> university preselected. Add university validates required fields and duplicate
+> names, then shows the confirmation above and adds the entry to the in-memory
+> list. Router integration is already merged. Shared rating stars now use gold.
+> This remains a UI prototype; data resets when the app restarts.

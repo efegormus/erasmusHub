@@ -8,5 +8,6 @@ abstract final class AppColors {
   static const textPrimary = Color(0xFF182238);
   static const textSecondary = Color(0xFF566176);
   static const border = Color(0xFFCED4E0);
+  static const rating = Color(0xFFFFC107);
   static const error = Color(0xFFBA1A1A);
 }
