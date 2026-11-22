@@ -128,9 +128,19 @@ The project aims to follow applicable data protection requirements, including KV
 
 ## 📌 Project Status
 
-**Current Phase: Step 2.1 – UI Prototype Integration**
+**Current Phase: Step 2.2 – Flutter UI Implementation**
 
-The Flutter application now lives at the repository root, with Android/iOS scaffolding, routing, shared theme, local Poppins fonts, and form validators. See [development setup](docs/README.md) for run commands and project structure.
+All approved screens are implemented in Flutter with working navigation, placeholder data, a shared theme and reusable widgets, and a bundled Poppins font. Login and sign-up are UI-only in this step; authentication and Firebase are planned for Step 3. See [development setup](docs/README.md) for run commands and project structure.
+
+**Implemented screens:** Login, Forgot password, Sign up (two steps), Verify email, Home, University detail, Post detail, New post, Places, Add place, Matches, Profile, Edit profile, Add exchange, Add university and My posts.
+
+The development scope and planned features are described in the project proposal.## 📌 Project Status
+
+**Current Phase: Step 2.2 – Flutter UI Implementation**
+
+All approved screens are implemented in Flutter with working navigation, placeholder data, a shared theme and reusable widgets, and a bundled Poppins font. Login and sign-up are UI-only in this step; authentication and Firebase are planned for Step 3. See [development setup](docs/README.md) for run commands and project structure.
+
+**Implemented screens:** Login, Forgot password, Sign up (two steps), Verify email, Home, University detail, Post detail, New post, Places, Add place, Matches, Profile, Edit profile, Add exchange, Add university and My posts.
 
 The development scope and planned features are described in the project proposal.
 
