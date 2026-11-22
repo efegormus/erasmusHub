@@ -31,7 +31,7 @@ class MyPostsScreen extends StatelessWidget {
                 : ListView.separated(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     itemCount: posts.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final post = posts[index];
